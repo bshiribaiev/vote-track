@@ -67,28 +67,6 @@ const upcomingElections = [
 export default function Home() {
   return (
     <main className="flex flex-col min-h-screen bg-white">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-border/50 bg-white/80 backdrop-blur-lg">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-sm">V</span>
-            </div>
-            <span className="font-semibold text-lg">VoteTrack</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/auth/login">
-              <Button variant="ghost" size="sm">
-                Log in
-              </Button>
-            </Link>
-            <Link href="/auth/signup">
-              <Button size="sm">Sign up</Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="relative overflow-hidden">
         {/* Background decoration */}
