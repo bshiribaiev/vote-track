@@ -33,13 +33,14 @@ export function Navbar() {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border/50 bg-white/80 backdrop-blur-lg">
-      <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+    <nav className="sticky top-0 z-50 border-b border-border/50 bg-white/85 backdrop-blur-xl">
+      <div className="h-0.5 bg-gradient-to-r from-primary via-blue-400 to-primary" />
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-3.5">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm shadow-primary/20 group-hover:shadow-md group-hover:shadow-primary/25 transition-shadow">
             <span className="text-white font-bold text-sm">V</span>
           </div>
-          <span className="font-semibold text-lg">VoteTrack</span>
+          <span className="font-semibold text-lg tracking-tight">VoteTrack</span>
         </Link>
         <div className="flex items-center gap-1">
           {user ? (
@@ -47,6 +48,11 @@ export function Navbar() {
               <Link href="/dashboard">
                 <Button variant="ghost" className="px-3 py-2">
                   My Ballot
+                </Button>
+              </Link>
+              <Link href="/representatives">
+                <Button variant="ghost" className="px-3 py-2">
+                  My Reps
                 </Button>
               </Link>
               <Link href="/settings">

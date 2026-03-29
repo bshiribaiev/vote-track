@@ -42,8 +42,7 @@ export default function ComparePage() {
         supabase.from("candidates").select("*").eq("election_id", electionId).order("name"),
         supabase
           .from("stances")
-          .select("*")
-          .eq("status", "approved"),
+          .select("*"),
       ]);
 
       setProfile(profileRes.data);
@@ -64,8 +63,11 @@ export default function ComparePage() {
 
   if (loading) {
     return (
-      <main className="flex-1 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading comparison...</p>
+      <main className="flex-1 flex items-center justify-center civic-bg">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading comparison...</p>
+        </div>
       </main>
     );
   }
@@ -102,17 +104,20 @@ export default function ComparePage() {
   }
 
   return (
-    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 bg-gray-50/50">
-      <div className="mx-auto max-w-6xl">
+    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 civic-bg">
+      <div className="mx-auto max-w-6xl animate-fade-in">
         {/* Back */}
         <Link
           href={`/elections/${election.id}`}
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6 group"
         >
-          ← Back to {election.title}
+          <svg className="w-4 h-4 mr-1 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+          Back to {election.title}
         </Link>
 
-        <h1 className="text-3xl font-bold mb-2">Compare Candidates</h1>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Compare Candidates</h1>
         <p className="text-muted-foreground mb-6">{election.title}</p>
 
         {/* Candidate selector */}
@@ -150,7 +155,7 @@ export default function ComparePage() {
         ) : (
           <div className="rounded-xl border bg-white overflow-hidden">
             {/* Sticky candidate header */}
-            <div className="sticky top-[73px] z-10 bg-white border-b">
+            <div className="bg-white border-b">
               <div className={`grid divide-x ${
                 selectedCandidates.length === 2 ? "grid-cols-2" : "grid-cols-3"
               }`}>
@@ -178,8 +183,8 @@ export default function ComparePage() {
 
             {/* Stances by topic */}
             {topics.length === 0 ? (
-              <div className="p-12 text-center">
-                <p className="text-muted-foreground">No stances recorded for the selected candidates.</p>
+              <div className="p-12 text-center border-t">
+                <p className="text-muted-foreground">No stances recorded for the selected candidates yet.</p>
               </div>
             ) : (
               topics.map((topic) => {

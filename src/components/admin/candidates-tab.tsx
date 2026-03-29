@@ -146,8 +146,8 @@ export function CandidatesTab({ elections }: { elections: Election[] }) {
         </Button>
       </div>
 
-      <div className="rounded-lg border bg-white">
-        <Table>
+      <div className="rounded-lg border bg-white overflow-x-auto">
+        <Table className="min-w-[600px]">
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>

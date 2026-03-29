@@ -34,10 +34,12 @@ export default function AdminPage() {
         return;
       }
 
+      const today = new Date().toISOString().slice(0, 10);
       const { data } = await supabase
         .from("elections")
         .select("*")
-        .order("election_date", { ascending: false });
+        .gte("election_date", today)
+        .order("election_date", { ascending: true });
 
       setElections(data || []);
       setLoading(false);
@@ -46,24 +48,29 @@ export default function AdminPage() {
 
   function refreshElections() {
     const supabase = createClient();
+    const today = new Date().toISOString().slice(0, 10);
     supabase
       .from("elections")
       .select("*")
-      .order("election_date", { ascending: false })
+      .gte("election_date", today)
+      .order("election_date", { ascending: true })
       .then(({ data }) => setElections(data || []));
   }
 
   if (loading) {
     return (
-      <main className="flex-1 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading admin panel...</p>
+      <main className="flex-1 flex items-center justify-center civic-bg">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading admin panel...</p>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 bg-gray-50/50">
-      <div className="mx-auto max-w-6xl">
+    <main className="flex-1 px-6 py-10 civic-bg overflow-x-hidden">
+      <div className="mx-auto max-w-6xl overflow-x-auto">
         <h1 className="text-3xl font-bold mb-8">Admin Panel</h1>
 
         <Tabs defaultValue="elections">

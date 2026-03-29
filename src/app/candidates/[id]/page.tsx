@@ -45,7 +45,6 @@ export default function CandidateDetailPage() {
           .from("stances")
           .select("*")
           .eq("candidate_id", candidateId)
-          .eq("status", "approved")
           .order("extracted_at", { ascending: false }),
       ]);
 
@@ -81,15 +80,18 @@ export default function CandidateDetailPage() {
 
   if (loading) {
     return (
-      <main className="flex-1 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading candidate...</p>
+      <main className="flex-1 flex items-center justify-center civic-bg">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading candidate...</p>
+        </div>
       </main>
     );
   }
 
   if (!candidate || !profile) {
     return (
-      <main className="flex-1 flex items-center justify-center">
+      <main className="flex-1 flex items-center justify-center civic-bg">
         <p className="text-muted-foreground">Candidate not found.</p>
       </main>
     );
@@ -111,20 +113,23 @@ export default function CandidateDetailPage() {
     : 0;
 
   return (
-    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 bg-gray-50/50">
-      <div className="mx-auto max-w-4xl">
+    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 civic-bg">
+      <div className="mx-auto max-w-4xl animate-fade-in">
         {/* Back */}
         {election && (
           <Link
             href={`/elections/${election.id}`}
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6 group"
           >
-            ← Back to {election.title}
+            <svg className="w-4 h-4 mr-1 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            Back to {election.title}
           </Link>
         )}
 
         {/* Header */}
-        <div className="rounded-2xl border bg-white p-8 mb-6">
+        <div className="rounded-2xl border bg-white p-8 mb-6 shadow-sm">
           <div className="flex items-start gap-6">
             {/* Avatar placeholder */}
             <div className="shrink-0 h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center">

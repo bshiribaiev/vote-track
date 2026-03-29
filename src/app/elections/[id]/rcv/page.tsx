@@ -223,15 +223,18 @@ export default function RCVSimulatorPage() {
 
   if (loading) {
     return (
-      <main className="flex-1 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading simulator...</p>
+      <main className="flex-1 flex items-center justify-center civic-bg">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading simulator...</p>
+        </div>
       </main>
     );
   }
 
   if (!election || !election.is_rcv) {
     return (
-      <main className="flex-1 flex items-center justify-center">
+      <main className="flex-1 flex items-center justify-center civic-bg">
         <p className="text-muted-foreground">
           This election does not use ranked-choice voting.
         </p>
@@ -248,14 +251,17 @@ export default function RCVSimulatorPage() {
   );
 
   return (
-    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 bg-gray-50/50">
-      <div className="mx-auto max-w-2xl">
+    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 civic-bg">
+      <div className="mx-auto max-w-2xl animate-fade-in">
         {/* Back */}
         <Link
           href={`/elections/${election.id}`}
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6 group"
         >
-          ← Back to {election.title}
+          <svg className="w-4 h-4 mr-1 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+          Back to {election.title}
         </Link>
 
         {/* Header */}

@@ -91,6 +91,10 @@ export function ElectionsTab({
   const [form, setForm] = useState<ElectionForm>(EMPTY_ELECTION);
   const [saving, setSaving] = useState(false);
 
+  // Sort state: "asc" = nearest first, "desc" = furthest first
+  const [electionSort, setElectionSort] = useState<"asc" | "desc">("asc");
+  const [discoverSort, setDiscoverSort] = useState<"asc" | "desc">("asc");
+
   // Discovery state
   const [discovering, setDiscovering] = useState(false);
   const [discovered, setDiscovered] = useState<DiscoveredElection[]>([]);
@@ -167,8 +171,23 @@ export function ElectionsTab({
     onRefresh();
   }
 
-  // Discovery
+  // Discovery (with 1-hour localStorage cache)
   async function discoverElections() {
+    const CACHE_KEY = "discovered_elections";
+    const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      try {
+        const { data, ts } = JSON.parse(cached);
+        if (Date.now() - ts < CACHE_TTL && Array.isArray(data)) {
+          setDiscovered(data);
+          setDiscoverOpen(true);
+          return;
+        }
+      } catch { /* ignore bad cache */ }
+    }
+
     setDiscovering(true);
     setDiscovered([]);
     setDiscoverOpen(true);
@@ -178,6 +197,7 @@ export function ElectionsTab({
       const data = await res.json();
       if (data.elections) {
         setDiscovered(data.elections);
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data: data.elections, ts: Date.now() }));
       }
     } catch (err) {
       console.error("Discovery failed:", err);
@@ -212,13 +232,29 @@ export function ElectionsTab({
     onRefresh();
   }
 
-  // Research
+  // Research (with 1-hour localStorage cache per election)
   async function startResearch(election: Election) {
     setResearchElection(election);
     setResearchResult(null);
     setResearchLog([]);
-    setResearching(true);
     setResearchOpen(true);
+
+    const CACHE_KEY = `research_${election.id}`;
+    const CACHE_TTL = 60 * 60 * 1000;
+
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      try {
+        const { data, ts } = JSON.parse(cached);
+        if (Date.now() - ts < CACHE_TTL && data) {
+          setResearchLog(["Loaded from cache."]);
+          setResearchResult(data);
+          return;
+        }
+      } catch { /* ignore */ }
+    }
+
+    setResearching(true);
 
     try {
       const res = await fetch("/api/admin/research-election", {
@@ -254,6 +290,7 @@ export function ElectionsTab({
               setResearchLog((prev) => [...prev, evt.message]);
             } else if (evt.type === "result") {
               setResearchResult(evt.data);
+              localStorage.setItem(CACHE_KEY, JSON.stringify({ data: evt.data, ts: Date.now() }));
             }
           } catch { /* skip malformed */ }
         }
@@ -303,6 +340,26 @@ export function ElectionsTab({
     onRefresh();
   }
 
+  function fmtDate(dateStr: string) {
+    return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
+      month: "short", day: "numeric", year: "numeric",
+    });
+  }
+
+  const sortedElections = [...elections].sort((a, b) =>
+    electionSort === "asc"
+      ? a.election_date.localeCompare(b.election_date)
+      : b.election_date.localeCompare(a.election_date)
+  );
+
+  const sortedDiscovered = [...discovered].sort((a, b) =>
+    discoverSort === "asc"
+      ? a.election_date.localeCompare(b.election_date)
+      : b.election_date.localeCompare(a.election_date)
+  );
+
+  const sortArrow = (dir: "asc" | "desc") => dir === "asc" ? " ↑" : " ↓";
+
   return (
     <>
       <div className="flex items-center justify-between mb-4">
@@ -315,19 +372,24 @@ export function ElectionsTab({
         </div>
       </div>
 
-      <div className="rounded-lg border bg-white">
-        <Table>
+      <div className="rounded-lg border bg-white overflow-x-auto">
+        <Table className="min-w-[700px]">
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>Date</TableHead>
+              <TableHead
+                className="cursor-pointer select-none hover:text-foreground"
+                onClick={() => setElectionSort((s) => s === "asc" ? "desc" : "asc")}
+              >
+                Date{sortArrow(electionSort)}
+              </TableHead>
               <TableHead>District</TableHead>
               <TableHead className="w-[180px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {elections.map((e) => (
+            {sortedElections.map((e) => (
               <TableRow key={e.id}>
                 <TableCell className="font-medium">{e.title}</TableCell>
                 <TableCell>
@@ -336,7 +398,7 @@ export function ElectionsTab({
                     {e.is_rcv ? " (RCV)" : ""}
                   </Badge>
                 </TableCell>
-                <TableCell>{e.election_date}</TableCell>
+                <TableCell className="whitespace-nowrap">{fmtDate(e.election_date)}</TableCell>
                 <TableCell>
                   {e.district_type
                     ? `${e.district_type.replace(/_/g, " ")} ${e.district_number || ""}`
@@ -375,7 +437,7 @@ export function ElectionsTab({
 
       {/* CRUD Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="sm:!max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingId ? "Edit Election" : "New Election"}</DialogTitle>
           </DialogHeader>
@@ -535,7 +597,7 @@ export function ElectionsTab({
 
       {/* Discovery Dialog */}
       <Dialog open={discoverOpen} onOpenChange={setDiscoverOpen}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="sm:!max-w-[80vw] max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Discovered Elections</DialogTitle>
           </DialogHeader>
@@ -547,50 +609,72 @@ export function ElectionsTab({
           ) : discovered.length === 0 ? (
             <p className="py-8 text-center text-muted-foreground">No new elections found.</p>
           ) : (
-            <div className="space-y-3">
+            <>
               <p className="text-sm text-muted-foreground">{discovered.length} elections found</p>
-              {discovered.map((e, idx) => (
-                <div key={idx} className="rounded-lg border p-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold">{e.title}</h3>
-                        <Badge variant="secondary">{e.election_type}</Badge>
-                        {e.is_rcv && <Badge variant="outline" className="text-xs">RCV</Badge>}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{e.office}</p>
-                      <p className="text-sm mt-1">{e.election_date}</p>
-                      {e.background_info && (
-                        <p className="text-xs text-muted-foreground mt-2">{e.background_info}</p>
-                      )}
-                    </div>
-                    <div className="flex gap-2 shrink-0">
-                      <Button
-                        size="sm"
-                        onClick={() => approveDiscovered(idx)}
-                        disabled={approving.has(idx)}
+              <div className="rounded-lg border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none hover:text-foreground"
+                        onClick={() => setDiscoverSort((s) => s === "asc" ? "desc" : "asc")}
                       >
-                        {approving.has(idx) ? "Adding..." : "Approve"}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setDiscovered((prev) => prev.filter((_, i) => i !== idx))}
-                      >
-                        Dismiss
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                        Date{sortArrow(discoverSort)}
+                      </TableHead>
+                      <TableHead>Office</TableHead>
+                      <TableHead className="w-[140px]">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sortedDiscovered.map((e, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell>
+                          <p className="font-medium">{e.title}</p>
+                          {e.background_info && (
+                            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1 max-w-[300px]">{e.background_info}</p>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Badge variant="secondary">{e.election_type}</Badge>
+                            {e.is_rcv && <Badge variant="outline" className="text-xs">RCV</Badge>}
+                          </div>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">{fmtDate(e.election_date)}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">{e.office}</TableCell>
+                        <TableCell>
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              onClick={() => approveDiscovered(idx)}
+                              disabled={approving.has(idx)}
+                            >
+                              {approving.has(idx) ? "..." : "Approve"}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setDiscovered((prev) => prev.filter((_, i) => i !== idx))}
+                            >
+                              Dismiss
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
 
       {/* Research Dialog */}
       <Dialog open={researchOpen} onOpenChange={setResearchOpen}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="sm:!max-w-3xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               Research: {researchElection?.title}

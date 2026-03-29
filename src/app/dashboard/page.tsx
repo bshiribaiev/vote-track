@@ -271,16 +271,21 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <main className="flex-1 flex items-center justify-center">
-        <p className="text-muted-foreground">Loading your ballot...</p>
+      <main className="flex-1 flex items-center justify-center civic-bg">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading your ballot...</p>
+        </div>
       </main>
     );
   }
 
   if (!profile) return null;
 
-  const myElections = elections.filter((e) => isEligible(e, profile));
-  const discoverElections = elections;
+  const today = new Date().toISOString().slice(0, 10);
+  const upcomingEligible = elections.filter((e) => isEligible(e, profile) && e.election_date >= today);
+  const pastEligible = elections.filter((e) => isEligible(e, profile) && e.election_date < today);
+  const discoverElections = elections.filter((e) => e.election_date >= today);
 
   function getIneligibilityReason(election: Election): string | undefined {
     if (election.district_type && election.district_type !== "statewide" && election.district_number) {
@@ -304,12 +309,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="flex-1 px-6 sm:px-10 lg:px-16 py-10 bg-gray-50/50">
-      <div className="mx-auto max-w-5xl">
+    <main className="flex-1 px-6 py-10 civic-bg">
+      <div className="mx-auto max-w-5xl animate-fade-in">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">Your Elections</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-3xl font-bold tracking-tight">Your Elections</h1>
+          <p className="text-muted-foreground mt-1.5">
             Showing elections for {profile.address?.split(",")[0] || "your address"}
             {profile.party_slug && (
               <> &middot; {PARTY_LABELS[profile.party_slug as PartySlugs]}</>
@@ -321,15 +326,20 @@ export default function DashboardPage() {
         <Tabs defaultValue="my-ballot">
           <TabsList className="mb-4 !h-auto p-1.5 gap-1">
             <TabsTrigger value="my-ballot" className="px-8 py-2 text-base font-medium">
-              My Ballot ({myElections.length})
+              My Ballot ({upcomingEligible.length})
             </TabsTrigger>
             <TabsTrigger value="discover" className="px-8 py-2 text-base font-medium">
               Discover ({discoverElections.length})
             </TabsTrigger>
+            {pastEligible.length > 0 && (
+              <TabsTrigger value="past" className="px-8 py-2 text-base font-medium">
+                Past ({pastEligible.length})
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="my-ballot">
-            {myElections.length === 0 ? (
+            {upcomingEligible.length === 0 ? (
               <div className="rounded-xl border bg-white p-12 text-center">
                 <p className="text-muted-foreground">
                   No upcoming elections match your district and party registration.
@@ -340,7 +350,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {myElections.map((election) => (
+                {upcomingEligible.map((election) => (
                   <ElectionCard
                     key={election.id}
                     election={election}
@@ -368,6 +378,20 @@ export default function DashboardPage() {
                   />
                 );
               })}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="past">
+            <div className="space-y-4">
+              {pastEligible.map((election) => (
+                <ElectionCard
+                  key={election.id}
+                  election={election}
+                  candidates={getCandidatesForElection(election.id)}
+                  pollingSites={getSitesForElection(election.id)}
+                  eligible={true}
+                />
+              ))}
             </div>
           </TabsContent>
         </Tabs>

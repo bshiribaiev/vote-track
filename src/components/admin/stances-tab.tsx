@@ -274,8 +274,8 @@ export function StancesTab({ elections }: { elections: Election[] }) {
         <Button onClick={openCreate}>+ New Stance</Button>
       </div>
 
-      <div className="rounded-lg border bg-white">
-        <Table>
+      <div className="rounded-lg border bg-white overflow-x-auto">
+        <Table className="min-w-[700px]">
           <TableHeader>
             <TableRow>
               <TableHead>Candidate</TableHead>
@@ -364,7 +364,7 @@ export function StancesTab({ elections }: { elections: Election[] }) {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="sm:!max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingId ? "Edit Stance" : "New Stance"}</DialogTitle>
           </DialogHeader>
@@ -505,7 +505,7 @@ export function StancesTab({ elections }: { elections: Election[] }) {
 
       {/* AI Research Dialog */}
       <Dialog open={researchOpen} onOpenChange={setResearchOpen}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="sm:!max-w-3xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>AI Stance Research</DialogTitle>
           </DialogHeader>

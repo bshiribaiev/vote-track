@@ -71,12 +71,17 @@ export default function Home() {
       <section className="relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-br from-primary/10 via-purple-500/5 to-cyan-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[700px] bg-gradient-to-br from-primary/8 via-blue-400/5 to-sky-500/3 rounded-full blur-3xl" />
           <div className="absolute top-20 right-0 w-[400px] h-[400px] bg-gradient-to-l from-blue-500/5 to-transparent rounded-full blur-3xl" />
+          {/* Subtle grid pattern */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: "linear-gradient(90deg, #1e3a5f 1px, transparent 1px), linear-gradient(#1e3a5f 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }} />
         </div>
 
-        <div className="mx-auto max-w-6xl px-6 pt-24 pb-20">
-          <div className="flex flex-col items-center text-center gap-8">
+        <div className="mx-auto max-w-6xl px-6 pt-28 pb-24">
+          <div className="flex flex-col items-center text-center gap-8 animate-fade-in">
             <Badge
               variant="outline"
               className="px-4 py-1.5 text-sm font-medium border-primary/20 text-primary bg-primary/5"
@@ -89,7 +94,7 @@ export default function Home() {
                 Know your ballot.
               </span>
               <br />
-              <span className="bg-gradient-to-r from-primary via-purple-600 to-primary bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-blue-600 to-primary bg-clip-text text-transparent">
                 Vote with confidence.
               </span>
             </h1>
@@ -143,7 +148,7 @@ export default function Home() {
       </section>
 
       {/* Elections */}
-      <section id="elections" className="px-6 py-24 bg-gray-50/70">
+      <section id="elections" className="px-6 py-24 civic-bg">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <p className="text-sm font-semibold text-primary mb-3 uppercase tracking-widest">
@@ -158,11 +163,11 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto">
+          <div className="grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto stagger-children">
             {upcomingElections.map((election) => (
               <div
                 key={election.title}
-                className="group relative bg-white rounded-2xl border border-border/60 p-6 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+                className="group relative bg-white rounded-2xl border border-border/60 p-6 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-0.5"
               >
                 <div className="flex items-center gap-2 mb-4">
                   <Badge
@@ -217,10 +222,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 max-w-4xl mx-auto">
+          <div className="grid gap-8 sm:grid-cols-2 max-w-4xl mx-auto stagger-children">
             {features.map((feature) => (
-              <div key={feature.title} className="flex gap-4">
-                <div className="shrink-0 h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+              <div key={feature.title} className="flex gap-4 group">
+                <div className="shrink-0 h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary/15 group-hover:scale-105 transition-all duration-200">
                   {feature.icon}
                 </div>
                 <div>
@@ -238,7 +243,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="px-6 py-24 bg-gray-50/70">
+      <section className="relative px-6 py-24 bg-gradient-to-b from-primary/[0.03] to-slate-50/80 overflow-hidden">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
             Ready to find your ballot?

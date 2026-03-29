@@ -186,26 +186,40 @@ export default function OnboardingPage() {
   };
 
   return (
-    <main className="flex-1 flex items-start justify-center px-4 pt-16 pb-12 bg-gray-50/50">
-      <Card className="w-full max-w-xl min-h-[420px] flex flex-col">
+    <main className="flex-1 flex items-start justify-center px-4 pt-12 pb-12 civic-bg">
+      <div className="w-full max-w-xl animate-fade-in">
+      <Card className="min-h-[420px] flex flex-col shadow-xl shadow-primary/5 border-border/50">
         <CardHeader className="text-center">
           {/* Stepper */}
-          <div className="flex items-center justify-center gap-2 mb-4">
+          <div className="flex items-center justify-center gap-2 mb-6">
             {STEPS.map((label, i) => (
               <div key={label} className="flex items-center gap-2">
-                <div
-                  className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
-                    i <= step
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {i + 1}
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
+                      i < step
+                        ? "bg-green-500 text-white"
+                        : i === step
+                        ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {i < step ? (
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                      </svg>
+                    ) : (
+                      i + 1
+                    )}
+                  </div>
+                  <span className={`text-[10px] font-medium ${i <= step ? "text-foreground" : "text-muted-foreground"}`}>
+                    {label}
+                  </span>
                 </div>
                 {i < STEPS.length - 1 && (
                   <div
-                    className={`h-0.5 w-10 rounded-full transition-colors ${
-                      i < step ? "bg-primary" : "bg-muted"
+                    className={`h-0.5 w-10 rounded-full transition-all duration-300 mb-4 ${
+                      i < step ? "bg-green-500" : "bg-muted"
                     }`}
                   />
                 )}
@@ -352,6 +366,7 @@ export default function OnboardingPage() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </main>
   );
 }
