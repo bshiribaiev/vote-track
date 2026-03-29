@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useChatContext } from "@/components/chat-provider";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   INTEREST_LABELS,
   PARTY_LABELS,
@@ -20,6 +20,7 @@ import {
 export default function CandidateDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { setPageContext } = useChatContext();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [election, setElection] = useState<Election | null>(null);
   const [stances, setStances] = useState<Stance[]>([]);
@@ -61,9 +62,22 @@ export default function CandidateDetailPage() {
         setElection(electionData);
       }
 
+      // Set chat context
+      if (candidateRes.data) {
+        setPageContext({
+          type: "candidate",
+          candidateId: candidateId,
+          suggestedQuestions: [
+            `What are ${candidateRes.data.name}'s key policy positions?`,
+            `How does ${candidateRes.data.name} compare to other candidates?`,
+            `What is ${candidateRes.data.name}'s background?`,
+          ],
+        });
+      }
+
       setLoading(false);
     });
-  }, [params.id, router]);
+  }, [params.id, router, setPageContext]);
 
   if (loading) {
     return (

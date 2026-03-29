@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useChatContext } from "@/components/chat-provider";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Election, Candidate, PollingSite } from "@/lib/types/database";
@@ -23,6 +24,7 @@ function openGoogleCalendar(title: string, date: string, description: string) {
 export default function ElectionDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { setPageContext } = useChatContext();
   const [election, setElection] = useState<Election | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [pollingSites, setPollingSites] = useState<PollingSite[]>([]);
@@ -48,9 +50,28 @@ export default function ElectionDetailPage() {
       setElection(electionRes.data);
       setCandidates(candidatesRes.data || []);
       setPollingSites(sitesRes.data || []);
+
+      // Set chat context
+      if (electionRes.data) {
+        const candidateNames = (candidatesRes.data || []).map((c: Candidate) => c.name);
+        setPageContext({
+          type: "election",
+          electionId: electionId,
+          suggestedQuestions: [
+            `Tell me about the ${electionRes.data.title}`,
+            candidateNames.length > 1
+              ? `Compare ${candidateNames[0]} and ${candidateNames[1]}`
+              : undefined,
+            electionRes.data.is_rcv
+              ? "How does ranked-choice voting work?"
+              : undefined,
+          ].filter(Boolean) as string[],
+        });
+      }
+
       setLoading(false);
     });
-  }, [params.id, router]);
+  }, [params.id, router, setPageContext]);
 
   if (loading) {
     return (

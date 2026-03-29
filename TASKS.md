@@ -77,21 +77,18 @@ Each task ends with a **build + manual test checkpoint**. Nothing gets committed
 ---
 
 ## Phase 5: AI Chatbot
-### Task 5.1 - Gemini Chat Integration
-- [ ] API route for Gemini 3 Flash chat completions
-- [ ] Floating chat bubble component (bottom-right)
-- [ ] Chat UI with message history (user/assistant bubbles)
-- [ ] Interest-injected system prompt
-- [ ] Page context injection (current candidate/election data)
-- **Test:** Open chat on candidate page, ask about a candidate's stance on your interest topics. Verify cited responses
-- **Commit checkpoint**
-
-### Task 5.2 - Proactive Prompts
-- [ ] Context-aware suggested questions based on current page + user interests
-- [ ] Suggested question chips above chat input
-- [ ] Guardrails: decline off-topic or partisan opinion questions
-- **Test:** Navigate to candidate page, see relevant suggested questions. Try asking off-topic question, verify refusal
-- **Commit checkpoint**
+### Task 5.1 - Gemini Chat with Session History ✅
+- [x] API route for Gemini 3 Flash Preview with streaming + Google Search grounding
+- [x] Floating chat bubble with smooth open/close animations
+- [x] Expandable panel (45vw default, full screen maximized) with session sidebar
+- [x] Chat sessions + messages persisted in Supabase
+- [x] Session history sidebar (resizable, deletable, persistent state)
+- [x] Interest-injected system prompt + page context injection
+- [x] AI-generated follow-up questions after each turn (cached in DB)
+- [x] Suggested question chips on candidate/election pages
+- [x] Markdown rendering with GFM tables, raw HTML, linked sources
+- [x] Thinking dots animation (. .. ...)
+- [x] Guardrails: no opinions, cite sources, stay relevant
 
 ---
 
