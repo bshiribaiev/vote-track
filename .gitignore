@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.claude
+TASKS.md
+AGENTS.md
+CLAUDE.md
+PRODUCT_SPEC.md
