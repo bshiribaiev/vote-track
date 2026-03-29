@@ -31,16 +31,16 @@ export function Navbar() {
           </div>
           <span className="font-semibold text-lg">VoteTrack</span>
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1">
           {user ? (
             <>
               <Link href="/dashboard">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" className="px-3 py-2">
                   My Ballot
                 </Button>
               </Link>
               <Link href="/settings">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" className="px-3 py-2">
                   Settings
                 </Button>
               </Link>
