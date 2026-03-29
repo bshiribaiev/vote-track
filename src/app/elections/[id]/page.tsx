@@ -241,6 +241,21 @@ export default function ElectionDetailPage() {
           </div>
         )}
 
+        {/* Compare Candidates */}
+        {candidates.length >= 2 && (
+          <div className="rounded-xl border bg-white p-6 mb-8 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold mb-1">Compare Candidates</h3>
+              <p className="text-sm text-muted-foreground">
+                View stances side-by-side to see where candidates agree and differ.
+              </p>
+            </div>
+            <Link href={`/elections/${election.id}/compare`}>
+              <Button variant="outline">Compare</Button>
+            </Link>
+          </div>
+        )}
+
         {/* RCV Simulator */}
         {election.is_rcv && candidates.length > 0 && (
           <div className="rounded-xl border bg-white p-6 mb-8 flex items-center justify-between">
