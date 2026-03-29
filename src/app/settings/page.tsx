@@ -57,7 +57,7 @@ export default function SettingsPage() {
           const res = await fetch("/api/representatives", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ address: data.address }),
+            body: JSON.stringify({ districts: data.district_map, address: data.address }),
           });
           const repData = await res.json();
           if (repData.representatives) {
