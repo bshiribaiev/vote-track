@@ -3,7 +3,9 @@ import { GoogleGenAI } from "@google/genai";
 
 const genai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
-const PROMPT = `Search the web for upcoming elections in New York City. Include city, state, and federal races that affect NYC voters. Focus on elections happening in 2025 and 2026.
+const today = new Date().toISOString().slice(0, 10);
+
+const PROMPT = `Today is ${today}. Search the web for UPCOMING elections in New York City — only elections with dates AFTER today. Include city, state, and federal races that affect NYC voters. Do NOT include any elections that have already happened.
 
 For each election found, return a JSON array of objects with these fields:
 - title: string (e.g. "Manhattan CD3 Special Election")
@@ -24,7 +26,7 @@ Return ONLY valid JSON — an array of election objects. No markdown, no explana
 export async function POST(request: NextRequest) {
   try {
     const response = await genai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3-flash-preview",
       contents: [{ role: "user", parts: [{ text: PROMPT }] }],
       config: {
         tools: [{ googleSearch: {} }],
@@ -49,6 +51,13 @@ export async function POST(request: NextRequest) {
     if (!Array.isArray(elections)) {
       elections = [elections];
     }
+
+    // Filter out past elections and sort nearest first
+    elections = elections
+      .filter((e: { election_date?: string }) => e.election_date && e.election_date >= today)
+      .sort((a: { election_date: string }, b: { election_date: string }) =>
+        a.election_date.localeCompare(b.election_date)
+      );
 
     return NextResponse.json({ elections });
   } catch (err) {

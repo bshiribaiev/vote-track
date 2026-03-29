@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         send("log", `Researching candidates for ${body.title}...`);
 
         const response = await genai.models.generateContent({
-          model: "gemini-2.5-flash",
+          model: "gemini-3-flash-preview",
           contents: [{ role: "user", parts: [{ text: buildPrompt(body) }] }],
           config: {
             tools: [{ googleSearch: {} }],

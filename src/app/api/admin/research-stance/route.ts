@@ -33,7 +33,7 @@ Pick the most relevant topic_slug from the list. No markdown, no explanation —
 
   try {
     const response = await genai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3-flash-preview",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
         systemInstruction: systemPrompt,
