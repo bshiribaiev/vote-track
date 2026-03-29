@@ -29,7 +29,7 @@ async function buildPageContext(pageContext: {
         .from("stances")
         .select("*")
         .eq("candidate_id", candidate.id)
-        .eq("status", "approved");
+;
 
       const { data: election } = await supabase
         .from("elections")
@@ -83,7 +83,7 @@ async function buildPageContext(pageContext: {
             .from("stances")
             .select("*")
             .eq("candidate_id", c.id)
-            .eq("status", "approved");
+    ;
 
           if (stances && stances.length > 0) {
             for (const s of stances) {
