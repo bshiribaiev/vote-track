@@ -265,19 +265,6 @@ export default function CandidateDetailPage() {
             </div>
           </div>
         )}
-
-        {/* RCV link if applicable */}
-        {election?.is_rcv && (
-          <div className="rounded-xl border bg-white p-6 text-center">
-            <h3 className="font-semibold mb-2">Practice Ranked-Choice Voting</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              This election uses RCV. Rank up to 5 candidates in order of preference.
-            </p>
-            <Link href={`/elections/${election.id}/rcv`}>
-              <Button>Open RCV Simulator</Button>
-            </Link>
-          </div>
-        )}
       </div>
     </main>
   );

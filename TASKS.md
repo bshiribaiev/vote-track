@@ -48,32 +48,31 @@ Each task ends with a **build + manual test checkpoint**. Nothing gets committed
 - [x] Create re-runnable seed script (`supabase/seed.sql`)
 - **Test:** Run seed in Supabase SQL Editor, verify data in tables
 
-### Task 3.2 - Ballot Feed UI
-- [ ] "My Ballot" tab - filtered by user's districts + party
-- [ ] "Discover" tab - all elections with ineligibility warnings
-- [ ] Election context cards (office, date, type, RCV badge)
-- [ ] "Add to Calendar" buttons (Early Voting + Election Day, .ics download)
-- **Test:** Toggle between tabs, verify correct filtering. Download .ics file opens in calendar app
-- **Commit checkpoint**
+### Task 3.2 - Ballot Feed UI ✅
+- [x] "My Ballot" tab - filtered by user's districts + party
+- [x] "Discover" tab - all elections with ineligibility warnings
+- [x] Election context cards (office, date, type, RCV badge)
+- [x] "Add to Calendar" buttons (Google Calendar integration)
+- [x] Election detail page with candidates, polling sites, Google Maps links
+- [x] Settings page with profile summary
+- **Commit:** `a14e20f`
 
 ---
 
 ## Phase 4: Candidate Profiles & Alignment
-### Task 4.1 - Candidate Profile Page
-- [ ] Candidate detail page (`/candidates/[id]`)
-- [ ] Bio section with photo placeholder
-- [ ] Alignment badges (green for user's interests, grey for others)
-- [ ] Stance timeline (reverse-chronological, shows changes)
-- **Test:** View candidate, verify green/grey tags match your interests. Stances ordered correctly
-- **Commit checkpoint**
+### Task 4.1 - Candidate Profile Page ✅
+- [x] Candidate detail page (`/candidates/[id]`)
+- [x] Bio section with avatar initials placeholder
+- [x] Alignment badges (green for user's interests, grey for others)
+- [x] Stance timeline (reverse-chronological, interest matches first)
+- **Commit:** `d32e321`
 
-### Task 4.2 - RCV Simulator
-- [ ] Drag-and-drop ranking interface (1-5) for RCV elections
-- [ ] Visual feedback (numbered positions, candidate cards)
-- [ ] "Reset" and "Share" functionality
-- [ ] Educational tooltip explaining RCV
-- **Test:** Drag candidates to rank 1-5, reorder works, reset clears, share generates link/text
-- **Commit checkpoint**
+### Task 4.2 - RCV Simulator ✅
+- [x] Drag-and-drop ranking interface (1-5) using dnd-kit
+- [x] Visual feedback (numbered positions, candidate cards, rank badges)
+- [x] "Reset" and "Share" functionality
+- [x] Educational info box explaining RCV
+- [x] RCV link on election detail page (not candidate page)
 
 ---
 

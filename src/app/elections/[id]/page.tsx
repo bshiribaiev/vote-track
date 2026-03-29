@@ -220,6 +220,21 @@ export default function ElectionDetailPage() {
           </div>
         )}
 
+        {/* RCV Simulator */}
+        {election.is_rcv && candidates.length > 0 && (
+          <div className="rounded-xl border bg-white p-6 mb-8 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold mb-1">Practice Ranked-Choice Voting</h3>
+              <p className="text-sm text-muted-foreground">
+                This election uses RCV. Practice ranking up to 5 candidates in order of preference.
+              </p>
+            </div>
+            <Link href={`/elections/${election.id}/rcv`}>
+              <Button>Open RCV Simulator</Button>
+            </Link>
+          </div>
+        )}
+
         {/* Polling sites */}
         {pollingSites.length > 0 && (
           <div>
