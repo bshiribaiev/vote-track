@@ -5,53 +5,48 @@ Each task ends with a **build + manual test checkpoint**. Nothing gets committed
 ---
 
 ## Phase 1: Project Setup & Database
-### Task 1.1 - Initialize Next.js + Supabase + shadcn
-- [ ] Create Next.js app (App Router, TypeScript, Tailwind)
-- [ ] Install and configure shadcn/ui
-- [ ] Install Supabase client (`@supabase/supabase-js`, `@supabase/ssr`)
-- [ ] Set up environment variables (`.env.local`)
-- [ ] Create basic layout with shadcn components
-- **Test:** App runs on `localhost:3000`, shows a styled landing page
-- **Commit checkpoint**
+### Task 1.1 - Initialize Next.js + Supabase + shadcn ✅
+- [x] Create Next.js app (App Router, TypeScript, Tailwind)
+- [x] Install and configure shadcn/ui
+- [x] Install Supabase client (`@supabase/supabase-js`, `@supabase/ssr`)
+- [x] Set up environment variables (`.env.local`)
+- [x] Create basic layout with shadcn components
+- **Commit:** `f546413`
 
-### Task 1.2 - Database Schema
-- [ ] Create Supabase migration with all tables (profiles, elections, candidates, stances, polling_sites)
-- [ ] Set up Row Level Security (RLS) policies
-- [ ] Create database types from Supabase schema
-- **Test:** Tables visible in Supabase dashboard, RLS policies active
-- **Commit checkpoint**
+### Task 1.2 - Database Schema ✅
+- [x] Create Supabase migration with all tables (profiles, elections, candidates, stances, polling_sites)
+- [x] Set up Row Level Security (RLS) policies
+- [x] Create database types from Supabase schema
+- **Commit:** `20f2b4f`
 
 ---
 
 ## Phase 2: Auth & Onboarding
-### Task 2.1 - Supabase Email Auth
-- [ ] Sign up page (email + password)
-- [ ] Sign in page
-- [ ] Auth middleware for protected routes
-- [ ] Auto-create profile row on sign-up (trigger or client-side)
-- **Test:** Can sign up, sign in, sign out. Profile row created in DB
-- **Commit checkpoint**
+### Task 2.1 - Supabase Email Auth ✅
+- [x] Sign up page (email + password)
+- [x] Sign in page
+- [x] Auth middleware for protected routes
+- [x] Auto-create profile row on sign-up (trigger or client-side)
+- **Commit:** `20f2b4f`
 
-### Task 2.2 - Onboarding Flow (Address + Party + Interests)
-- [ ] Multi-step onboarding form (post-signup redirect)
-- [ ] Google Places Autocomplete for address input
-- [ ] Google Civic Information API call to resolve districts
-- [ ] Party affiliation selector
-- [ ] Interest slug picker (multi-select chips)
-- [ ] Save all to `profiles` table
-- **Test:** Complete onboarding, verify `profiles` row has address, district_map, party_slug, interest_slugs
-- **Commit checkpoint**
+### Task 2.2 - Onboarding Flow (Address + Party + Interests) ✅
+- [x] Multi-step onboarding form (post-signup redirect)
+- [x] Google Places Autocomplete for address input
+- [x] District lookup via Google Geocoding + US Census APIs
+- [x] Party affiliation selector
+- [x] Interest slug picker (multi-select chips)
+- [x] Save all to `profiles` table
+- **Commit:** `422e26e`
 
 ---
 
 ## Phase 3: Election Data & Ballot Feed
-### Task 3.1 - Seed Real Election Data
-- [ ] Research and seed Manhattan CD3 Special Election (April 28) candidates
-- [ ] Research and seed June 23 Primary election races
-- [ ] Seed real polling site locations with coordinates
-- [ ] Create seed script that can be re-run
-- **Test:** Query Supabase tables, verify real candidate names, election dates, polling sites
-- **Commit checkpoint**
+### Task 3.1 - Seed Real Election Data ✅
+- [x] Research and seed Manhattan CD3 Special Election (April 28) — 5 candidates
+- [x] Research and seed June 23 Primary races (Governor, AG, Comptroller)
+- [x] Seed real polling site locations with coordinates (10 sites)
+- [x] Create re-runnable seed script (`supabase/seed.sql`)
+- **Test:** Run seed in Supabase SQL Editor, verify data in tables
 
 ### Task 3.2 - Ballot Feed UI
 - [ ] "My Ballot" tab - filtered by user's districts + party

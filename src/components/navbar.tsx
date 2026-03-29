@@ -36,7 +36,12 @@ export function Navbar() {
             <>
               <Link href="/dashboard">
                 <Button variant="ghost" size="sm">
-                  Dashboard
+                  My Ballot
+                </Button>
+              </Link>
+              <Link href="/settings">
+                <Button variant="ghost" size="sm">
+                  Settings
                 </Button>
               </Link>
             </>
