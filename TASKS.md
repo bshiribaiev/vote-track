@@ -93,40 +93,66 @@ Each task ends with a **build + manual test checkpoint**. Nothing gets committed
 ---
 
 ## Phase 6: Admin Panel
-### Task 6.1 - Admin Dashboard
-- [ ] Admin route (`/admin`) protected by `is_admin` check
-- [ ] List of pending stances for review
-- [ ] Stance detail with diff view (old vs. new)
-- [ ] Approve/Reject buttons
-- **Test:** Set your user as admin in DB. View pending stances, approve one, verify it appears on candidate profile
-- **Commit checkpoint**
-
-### Task 6.2 - AI Tagging Engine
-- [ ] Admin form to paste article URL
-- [ ] API route calling Gemini 3.1 Pro to extract stances
-- [ ] Parse response into stance records (topic_slug, summary, full_text)
-- [ ] Auto-create pending stance entries
-- **Test:** Paste a real news article URL about a CD3 candidate. Verify extracted stances appear in pending review
+### Task 6.1 - Admin CRUD Dashboard
+- [ ] Admin route (`/admin`) gated by `is_admin` on profile
+- [ ] **Elections tab:** list, create, edit, delete elections
+- [ ] **Candidates tab:** list, create, edit, delete candidates (scoped to election)
+- [ ] **Polling Sites tab:** list, create, edit, delete sites (scoped to election)
+- [ ] **Stances tab:** list all stances, approve/reject pending, edit, delete
+- [ ] Full form-based editing for all fields
+- **Test:** Set your user as admin. Create a new election, add a candidate, add a stance, approve it. Verify it shows on the public site
 - **Commit checkpoint**
 
 ---
 
-## Phase 7: Polling Sites Map
-### Task 7.1 - Google Maps Integration
-- [ ] Polling sites map page (`/polling-sites`)
-- [ ] Google Maps JS API with site pins
-- [ ] Filter by election and early voting vs. Election Day
-- [ ] Pin click shows site details (name, address, hours)
-- **Test:** View map, see pins for polling sites. Click pin, verify info popup. Filter works
+## Phase 7: Candidate Comparison View
+### Task 7.1 - Side-by-Side Comparison
+- [ ] Comparison page (`/elections/[id]/compare`)
+- [ ] Select 2-3 candidates to compare
+- [ ] Side-by-side view of stances grouped by topic
+- [ ] Highlight matches/differences with user's interests
+- [ ] Link from election detail page
+- **Test:** Select 2 CD3 candidates, compare their stances on housing and transit side by side
 - **Commit checkpoint**
 
 ---
 
-## Phase 8: Polish & Integration
-### Task 8.1 - End-to-End Flow Polish
-- [ ] Navigation bar with all sections
-- [ ] Loading states and error handling
-- [ ] Mobile responsive layout
-- [ ] Empty states for no elections/candidates
-- **Test:** Full walkthrough: sign up → onboard → browse elections → view candidate → use RCV → chat → check polling sites
-- **Final commit checkpoint**
+## Phase 8: AI Agent Pipeline
+### Task 8.1 - Election Discovery Agent
+- [ ] Admin clicks "Discover Elections" button in admin panel
+- [ ] API route calls Gemini 3.1 Pro with Google Search grounding
+- [ ] Searches for upcoming NYC elections (city, state, federal affecting NYC voters)
+- [ ] Returns structured election data (title, office, date, district, type, RCV)
+- [ ] Results appear in a review queue — admin can approve/reject each
+- [ ] Approved elections are created in the database
+- **Test:** Click discover, verify real upcoming elections appear, approve one, verify it shows in ballot feed
+- **Commit checkpoint**
+
+### Task 8.2 - Election Research Agent
+- [ ] Auto-triggers when admin approves a discovered election
+- [ ] Gemini researches candidates, bios, stances, polling sites for that election
+- [ ] Creates all records as pending for admin review
+- [ ] "Refresh" button on existing elections to update data
+- [ ] Admin reviews full batch — edit any field, approve/reject all
+- [ ] Streaming UI showing agent research progress
+- **Test:** Approve a discovered election, watch agent populate candidates and stances, review and approve batch
+- **Commit checkpoint**
+
+### Task 8.3 - AI Stance Research
+- [ ] Admin enters a prompt (e.g., "What is Lindsey Boylan's position on transit?")
+- [ ] Gemini 3.1 Pro with Google Search grounding researches and returns structured stance
+- [ ] Admin reviews, edits, approves → creates approved stance in DB
+- **Test:** Research a stance, verify sources, approve it, see it on candidate profile
+- **Commit checkpoint**
+
+---
+
+## Phase 9: Email & SMS Alerts
+### Task 9.1 - Election Alerts
+- [ ] User opt-in for alerts in settings (email and/or SMS)
+- [ ] Email alerts: early voting starts, election day reminder, new candidate stances
+- [ ] SMS alerts: election day reminder, early voting reminder
+- [ ] Admin trigger to send alerts for specific elections
+- **Test:** Opt in for alerts, trigger an alert, verify email/SMS received
+- **Commit checkpoint**
+
