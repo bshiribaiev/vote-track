@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "NYC VoteTrack",
+  title: "VoteTrack",
   description: "Your personalized NYC election guide",
 };
 
